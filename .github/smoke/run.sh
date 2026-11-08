@@ -141,6 +141,17 @@ else
   sleep 6
 fi
 adb shell dumpsys device_policy > "$OUT/device_policy.txt" 2>&1
+sleep 5
+# Diagnostics: is the control door enabled in the profile, and does the personal side see a forwarder?
+adb shell pm query-activities --user "$ID" -a com.privatespace.app.action.CONTROL -c android.intent.category.DEFAULT > "$OUT/q_profile.txt" 2>&1
+adb shell pm query-activities --user 0 -a com.privatespace.app.action.CONTROL -c android.intent.category.DEFAULT > "$OUT/q_personal.txt" 2>&1
+adb shell dumpsys package com.privatespace.app > "$OUT/pkg.txt" 2>&1
+adb shell dumpsys package > "$OUT/pkg_all.txt" 2>&1
+say "profile door: $(grep -c ControlActivity "$OUT/q_profile.txt") · personal matches: $(grep -cE "name=|packageName=" "$OUT/q_personal.txt")"
+grep -q "ControlActivity" "$OUT/q_profile.txt" && pass "control door enabled in the profile" || fail "control door not enabled in the profile"
+grep -qiE "IntentForwarder|forward" "$OUT/q_personal.txt" && pass "personal side sees the cross-profile forwarder" || fail "no cross-profile forwarder on the personal side"
+# Private Space should be back in front after Android's setup; if not, note it and open it.
+adb shell dumpsys activity activities | grep -m1 -E "topResumedActivity|mResumedActivity" | tee -a "$LOG" | grep -q privatespace && pass "back in Private Space after setup" || { fail "not back in Private Space after setup"; adb shell am start -W -n $PKG/.MainActivity | tail -1; sleep 5; }
 grep -q "com.privatespace.app" "$OUT/device_policy.txt" && pass "profile owner is Private Space" || fail "profile owner not found"
 adb shell pm list packages --user "$ID" > "$OUT/profile_packages_start.txt"
 shot 03_ready 3
