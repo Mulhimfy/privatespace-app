@@ -1,0 +1,25 @@
+:root{--void:#05060A;--abyss:#0A0C13;--raised:#161A25;--rim:rgba(255,255,255,.08);--text:#F2F3F8;--mid:#A4A9BA;--low:#6A6F82;--iris:#8E7CFF;--halo:#52C8FF;--mint:#67EBC1}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--void);color:var(--text);font:16px/1.6 "Manrope",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;background:
+radial-gradient(40vmax 30vmax at 50% 8%,rgba(142,124,255,.28),transparent 70%),
+radial-gradient(30vmax 26vmax at 70% 20%,rgba(82,200,255,.16),transparent 70%),
+radial-gradient(34vmax 30vmax at 15% 95%,rgba(103,235,193,.08),transparent 70%);animation:drift 30s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(2vmax,-1.5vmax,0) rotate(6deg)}}
+@media (prefers-reduced-motion:reduce){body::before{animation:none}}
+main{max-width:720px;margin:0 auto;padding:56px 20px 80px}
+h1,h2{font-family:"Space Grotesk",system-ui,sans-serif;letter-spacing:-.02em;line-height:1.12}
+h1{font-size:clamp(34px,7vw,52px);margin:28px 0 14px;font-weight:600}
+h2{font-size:22px;margin:40px 0 8px;font-weight:600}
+p,li{color:var(--mid)}a{color:var(--halo);text-decoration:none}a:hover{text-decoration:underline}
+.icon{width:96px;height:96px;border-radius:24px;box-shadow:0 0 60px rgba(142,124,255,.45)}
+.over{font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:28px 0}
+.card{background:linear-gradient(180deg,rgba(22,26,37,.8),rgba(16,19,28,.7));border:1px solid var(--rim);border-radius:22px;padding:18px 18px 16px;position:relative;overflow:hidden;transition:border-color .3s}
+.card:hover{border-color:rgba(82,200,255,.35)}
+.card b{display:block;color:var(--text);margin-bottom:4px}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(240px 140px at var(--x,50%) var(--y,0%),rgba(82,200,255,.12),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.card:hover::after{opacity:1}
+footer{margin-top:56px;color:var(--low);font-size:14px;border-top:1px solid var(--rim);padding-top:20px}
+.pill{display:inline-block;padding:12px 20px;border-radius:16px;background:#F4F1FF;color:#05060A;font-weight:800;box-shadow:0 12px 40px rgba(82,200,255,.25)}
+.pill:hover{text-decoration:none;transform:translateY(-1px)}

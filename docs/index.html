@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Private Space: hide apps and run dual apps on Android</title>
+<meta name="description" content="Private Space makes a second, hidden space inside your Android phone: clone apps for a second account and hide apps from your home screen. Built on Android's own work profile. No internet access.">
+<link rel="icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<img class="icon" src="icon.png" alt="Private Space icon">
+<h1>A second phone,<br>hidden inside yours.</h1>
+<p>Private Space makes a separate space on your Android phone. Copy any app into it to run a second account side by side, and make the apps in it disappear from your home screen whenever you like.</p>
+<div class="cards">
+<div class="card"><b>Dual apps</b>Two numbers in one chat app, two game accounts, work and personal apart.</div>
+<div class="card"><b>Hide apps in one tap</b>Hidden apps leave the home screen and app drawer, and send no notifications.</div>
+<div class="card"><b>Built into Android</b>Uses Android's own work profile. Nothing is rooted or emulated, so apps run at full speed.</div>
+<div class="card"><b>Nothing leaves your phone</b>No internet permission, no account, no ads, no tracking.</div>
+</div>
+<p><a class="pill" href="https://play.google.com/store/apps/details?id=com.privatespace.app">Get it on Google Play</a></p>
+<footer><a href="privacy.html">Privacy policy</a> · Private Space by Mulhimfy · <a href="https://github.com/Mulhimfy/privatespace-app/issues">Contact</a></footer>
+</main>
+<script>document.querySelectorAll('.card').forEach(c=>c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--x',(e.clientX-r.left)+'px');c.style.setProperty('--y',(e.clientY-r.top)+'px')}))</script>
+</body>
+</html>
