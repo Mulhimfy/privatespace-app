@@ -19,13 +19,18 @@ adb shell input keyevent KEYCODE_HOME
 sleep 15
 adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS >/dev/null 2>&1 || true
 for k in window_animation_scale transition_animation_scale animator_duration_scale; do adb shell settings put global $k 0; done
+# The emulator's vibrator HAL can take the whole emulator down: touch feedback off (the app follows it).
 adb shell settings put system haptic_feedback_enabled 0
+adb shell settings put system haptic_feedback_intensity 0 2>/dev/null || true
 SDK=$(adb shell getprop ro.build.version.sdk | tr -d '\r')
 say "sdk $SDK, screen $(adb shell wm size | grep -oE '[0-9]+x[0-9]+' | tail -1)"
 adb install -r "$APK" | tail -1 | tee -a "$LOG"
 
+alive() { [ "$(timeout 10 adb get-state 2>/dev/null)" = device ]; }
+gone() { say "FAIL emulator went away; stopping here"; adb logcat -d -v time > "$OUT/logcat.txt" 2>&1; exit 0; }
 shot() {
   sleep "${2:-0}"
+  alive || gone
   timeout 20 adb exec-out screencap -p > "$OUT/$1.png"
   say "shot $1 ($(stat -c %s "$OUT/$1.png") bytes)"
 }
@@ -76,6 +81,7 @@ PY
 }
 tap() {
   local want=$1 tries=${2:-4} mode=${3:-}
+  alive || gone
   for _ in $(seq "$tries"); do
     dump
     local b
@@ -126,6 +132,9 @@ else
   adb shell am start-user "$ID"
   adb shell pm install-existing --user "$ID" $PKG
   adb shell dpm set-profile-owner --user "$ID" $PKG/.ProfileAdmin | tee -a "$LOG"
+  sleep 2
+  # what Android does at the end of its own setup: start the admin's "provisioning finished" screen in the profile
+  adb shell am start --user "$ID" -n $PKG/.ProvisionedActivity | tail -1 | tee -a "$LOG"
   sleep 4
   adb shell am force-stop $PKG
   adb shell am start -W -n $PKG/.MainActivity | tail -1
