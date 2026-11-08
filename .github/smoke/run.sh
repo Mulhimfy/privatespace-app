@@ -94,6 +94,7 @@ tap() {
     sleep 2
   done
   say "NOT FOUND: '$want'"
+  NF=$((${NF:-0} + 1)); cp "$OUT/ui.xml" "$OUT/notfound_${NF}.xml" 2>/dev/null || true
   return 1
 }
 hold() {
@@ -172,7 +173,10 @@ shot 06_home 2
 adb shell pm list packages --user "$ID" > "$OUT/profile_packages_after_add.txt"
 APP1=${PICKED[0]:-Clock}
 seen "$APP1" full && pass "'$APP1' shows in the space" || fail "'$APP1' missing from the space grid"
-PKG1=$(adb shell pm list packages --user "$ID" | tr -d '\r' | sed 's/package://' | grep -iE "deskclock|calendar|contacts|documentsui|chrome|camera" | head -1)
+case "$APP1" in
+  Clock) PKG1=com.google.android.deskclock;; Calendar) PKG1=com.google.android.calendar;; Contacts) PKG1=com.google.android.contacts;;
+  Files) PKG1=com.google.android.documentsui;; Chrome) PKG1=com.android.chrome;; *) PKG1=com.android.camera2;;
+esac
 say "checking package $PKG1"
 
 # ---- 4. hide one app ----
